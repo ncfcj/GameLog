@@ -1,36 +1,31 @@
-# Clean Architecture Template
+# GameLog API
 
-What's included in the template?
+- Backend API developed in .NET 8 using the Clean Architecture with  Domain-Driven Design and CQRS using MediatR
 
-- SharedKernel project with common Domain-Driven Design abstractions.
-- Domain layer with sample entities.
-- Application layer with abstractions for:
-  - CQRS
-  - Example use cases
-  - Cross-cutting concerns (logging, validation)
-- Infrastructure layer with:
-  - Authentication
-  - Permission authorization
-  - EF Core, PostgreSQL
-  - Serilog
-- Seq for searching and analyzing structured logs
-  - Seq is available at http://localhost:8081 by default
-- Testing projects
-  - Architecture testing
+## How to use 👣
 
-I'm open to hearing your feedback about the template and what you'd like to see in future iterations.
+- The project isn't hosted yet. Sorry 😥
 
-If you're ready to learn more, check out [**Pragmatic Clean Architecture**](https://www.milanjovanovic.tech/pragmatic-clean-architecture?utm_source=ca-template):
+## Concepts used in Project 💡
 
+- Clean Architecture
+- Command-Query Responsibility Segregation
 - Domain-Driven Design
-- Role-based authorization
-- Permission-based authorization
-- Distributed caching with Redis
-- OpenTelemetry
-- Outbox pattern
-- API Versioning
+- Test-Driven Design
+- Logging
+- Validation
 - Unit testing
-- Functional testing
 - Integration testing
+- Role-based authorization
+
+## Future improvements 🤔
+- 100% Unit and Integration Tests coverage
+- CI/CD using Github Actions
+- Distributed caching with Redis
+- Permission-based authorization
+
+## Contributing 🤝
+
+Feel free to open a issue or submit a pull request for any bugs/improvements.
 
 Stay awesome!
