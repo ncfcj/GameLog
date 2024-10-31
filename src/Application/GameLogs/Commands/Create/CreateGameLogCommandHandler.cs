@@ -1,15 +1,14 @@
-﻿using Application.Abstractions.Data;
-using Application.Abstractions.Messaging;
-using Domain.GameLogs;
+﻿using Domain.GameLogs;
 using Domain.GameLogs.DomainEvents;
 using SharedKernel;
+using SharedKernel.Commands;
 
 namespace Application.GameLogs.Commands.Create;
 
-internal sealed class CreateGameLogCommandHandler(IApplicationDbContext context) 
-    : ICommandHandler<CreateGameLogCommand, Guid>
+internal sealed class CreateGameLogCommandHandler(IGameLogRepository repository) 
+    : ICommandHandler<CreateGameLogCommand, GameLogDto>
 {
-    public async Task<Result<Guid>> Handle(CreateGameLogCommand command, CancellationToken cancellationToken)
+    public async Task<Result<GameLogDto>> Handle(CreateGameLogCommand command, CancellationToken cancellationToken)
     {
         var gameLogBuilder = new GameLogBuilder(command.UserId);
 
@@ -20,12 +19,13 @@ internal sealed class CreateGameLogCommandHandler(IApplicationDbContext context)
             .WithReviewAndRating(command.Review, command.Rating)
             .Build();
         
-        gameLog.Raise(new GameLogCreatedDomainEvent(gameLog.Id));
+        gameLog.Raise(new GameLogCreatedDomainEvent($"GameLog with Id {gameLog.Id} has been created."));
         
-        context.GameLogs.Add(gameLog);
+        await repository.AddAsync(gameLog, cancellationToken);
+        await repository.CommitAsync(cancellationToken);
 
-        await context.SaveChangesAsync(cancellationToken);
-
-        return gameLog.Id;
+        var gameLogDto = new GameLogDto(gameLog);
+        
+        return gameLogDto;
     }
 }

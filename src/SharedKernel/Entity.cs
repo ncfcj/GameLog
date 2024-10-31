@@ -1,17 +1,19 @@
-﻿namespace SharedKernel;
+﻿using SharedKernel.Events;
+
+namespace SharedKernel;
 
 public abstract class Entity
 {
-    private readonly List<IDomainEvent> _domainEvents = [];
+    private readonly List<DomainEvent> _domainEvents = [];
 
-    public List<IDomainEvent> DomainEvents => [.. _domainEvents];
+    public List<DomainEvent> DomainEvents => [.. _domainEvents];
 
     public void ClearDomainEvents()
     {
         _domainEvents.Clear();
     }
 
-    public void Raise(IDomainEvent domainEvent)
+    public void Raise(DomainEvent domainEvent)
     {
         _domainEvents.Add(domainEvent);
     }

@@ -1,43 +1,36 @@
-﻿using Application.Abstractions.Data;
-using Application.Abstractions.Messaging;
-using Domain.GameLogs;
+﻿using Domain.GameLogs;
 using Domain.GameLogs.DomainEvents;
 using Domain.GameLogs.Entities;
-using Microsoft.EntityFrameworkCore;
 using SharedKernel;
+using SharedKernel.Commands;
 
 namespace Application.GameLogs.Commands.Complete;
 
-internal sealed class CompleteGameLogCommandHandler(IApplicationDbContext context)
-    : ICommandHandler<CompleteGameLogCommand, bool>
+internal sealed class CompleteGameLogCommandHandler(IGameLogRepository repository)
+    : ICommandHandler<CompleteGameLogCommand, GameLogDto>
 {
-    public async Task<Result<bool>> Handle(CompleteGameLogCommand command, CancellationToken cancellationToken)
+    public async Task<Result<GameLogDto>> Handle(CompleteGameLogCommand command, CancellationToken cancellationToken)
     {
-        GameLog gameLog = await context.GameLogs.FirstOrDefaultAsync(x => x.Id == command.GameLogId, cancellationToken);
+        GameLog gameLog = await repository.GetGameLogByIdAsync(command.GameLogId, cancellationToken);
 
         if (gameLog is null)
-        {
-            return Result.Failure<bool>(GameLogErrors.NotFound(command.GameLogId));
-        }
+            return Result.Failure<GameLogDto>(GameLogErrors.NotFound(command.GameLogId));
 
         if (gameLog.LogStatus == LogStatus.Complete)
-        {
-            return Result.Failure<bool>(GameLogErrors.GameIsAlreadyComplete(command.GameLogId));
-        }
+            return Result.Failure<GameLogDto>(GameLogErrors.GameIsAlreadyComplete(command.GameLogId));
 
         if (gameLog.LogStatus != LogStatus.Playing)
-        {
-            return Result.Failure<bool>(GameLogErrors.GameWasNotBeingPlayed(command.GameLogId));
-        }
+            return Result.Failure<GameLogDto>(GameLogErrors.GameWasNotBeingPlayed(command.GameLogId));
         
-        gameLog.Raise(new GameLogCompletedDomainEvent(gameLog.Id));
+        gameLog.Raise(new GameLogCompletedDomainEvent($"GameLog with the Id {gameLog.Id} was completed"));
         
         gameLog.Complete(command.Review, command.Rating);
 
-        context.GameLogs.Update(gameLog);
-        
-        await context.SaveChangesAsync(cancellationToken);
+        repository.Update(gameLog);
+        await repository.CommitAsync(cancellationToken);
 
-        return true;
+        var gameLogDto = new GameLogDto(gameLog);
+
+        return gameLogDto;
     }
 }

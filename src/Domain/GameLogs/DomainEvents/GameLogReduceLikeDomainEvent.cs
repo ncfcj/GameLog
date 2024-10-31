@@ -1,5 +1,10 @@
-﻿using SharedKernel;
+﻿using SharedKernel.Events;
 
 namespace Domain.GameLogs.DomainEvents;
 
-public sealed record GameLogReduceLikeDomainEvent(Guid GameLogId) : IDomainEvent;
+public sealed class GameLogReduceLikeDomainEvent(String message)
+    : DomainEvent(nameof(GameLogCompletedDomainEvent))
+{
+    public String Message { get; set; } = message;
+}
+

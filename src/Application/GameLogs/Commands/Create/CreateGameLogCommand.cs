@@ -1,5 +1,5 @@
-﻿using Application.Abstractions.Messaging;
-using Domain.GameLogs.Entities;
+﻿using Domain.GameLogs.Entities;
+using SharedKernel.Commands;
 
 namespace Application.GameLogs.Commands.Create;
 
@@ -12,4 +12,4 @@ public sealed record CreateGameLogCommand(
     Rating? Rating, 
     DateTime? StartDate, 
     DateTime? EndDate,
-    Guid UserId) : ICommand<Guid>;
+    Guid UserId) : ICommand<GameLogDto>;

@@ -1,8 +1,8 @@
 ﻿using Application.Abstractions.Data;
-using Application.Abstractions.Messaging;
 using Domain.GameLogs;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
+using SharedKernel.Queries;
 
 namespace Application.GameLogs.Queries.GetById;
 

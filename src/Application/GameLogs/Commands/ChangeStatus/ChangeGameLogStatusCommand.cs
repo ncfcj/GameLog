@@ -1,7 +1,7 @@
-﻿using Application.Abstractions.Messaging;
-using Domain.GameLogs.Entities;
+﻿using Domain.GameLogs.Entities;
+using SharedKernel.Commands;
 
 namespace Application.GameLogs.Commands.ChangeStatus;
 
-public sealed record ChangeGameLogStatusCommand(Guid GameLogId, LogStatus Status) 
-    : ICommand<bool>;
+public sealed record ChangeGameLogStatusCommand(Guid GameLogId, LogStatus Status)
+    : ICommand<GameLogDto>;

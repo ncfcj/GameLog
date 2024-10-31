@@ -1,5 +1,4 @@
-﻿using Application.Abstractions.Messaging;
-using Domain.GameLogs.Entities;
+﻿using Domain.GameLogs.Entities;
 
 namespace Application.GameLogs.Commands.Update;
 

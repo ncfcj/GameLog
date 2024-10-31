@@ -1,5 +1,4 @@
-﻿using Application.Abstractions.Messaging;
-using Gridify;
+﻿using Gridify;
 
 namespace Application.GameLogs.Queries.ListByUserId;
 

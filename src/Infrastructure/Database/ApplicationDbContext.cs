@@ -1,15 +1,25 @@
 ﻿using Application.Abstractions.Data;
 using Domain.GameLogs;
 using Domain.Users;
+using Infrastructure.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using SharedKernel;
+using SharedKernel.Handlers;
+using SharedKernel.Logging;
 
 namespace Infrastructure.Database;
 
-public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IPublisher publisher)
-    : DbContext(options), IApplicationDbContext
+public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, 
+    IPublisher publisher, 
+    IMediatorHandler mediatorHandler,
+    ILoggerManager loggerManager)
+    : DbContext(options), IApplicationDbContext, IUnitOfWork
 {
+    private readonly IMediatorHandler _mediatorHandler = mediatorHandler;
+    private readonly ILoggerManager _logger = loggerManager;
+    
     public DbSet<User> Users { get; set; }
     public DbSet<GameLog> GameLogs { get; set; }
     public DbSet<Friends> Friends { get; set; }
@@ -21,6 +31,42 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
         modelBuilder.HasDefaultSchema(Schemas.Default);
     }
 
+    
+    public async Task<bool> CommitAsync(CancellationToken cancellationToken = default)
+    {
+        IExecutionStrategy strategy = Database.CreateExecutionStrategy();
+
+        var result = await strategy.ExecuteAsync(async () =>
+        {
+            await using IDbContextTransaction transaction = await Database.BeginTransactionAsync(cancellationToken);
+            try
+            {
+                var success = await SaveChangesAsync(cancellationToken) > 0;
+
+                if (success)
+                {
+                    await _mediatorHandler.PublishEvents(this);
+                    await transaction.CommitAsync(cancellationToken);
+                }
+                else
+                {
+                    await transaction.RollbackAsync(cancellationToken);
+                }
+
+                return success;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex);
+                await transaction.RollbackAsync(cancellationToken);
+                throw;
+            }
+        });
+
+        return result;
+    }
+
+    
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         // When should you publish domain events?
