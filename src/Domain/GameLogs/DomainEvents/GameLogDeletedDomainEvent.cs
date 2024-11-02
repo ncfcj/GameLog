@@ -1,5 +1,4 @@
-﻿using SharedKernel;
-using SharedKernel.Events;
+﻿using SharedKernel.Events;
 
 namespace Domain.GameLogs.DomainEvents;
 

@@ -20,9 +20,9 @@ internal sealed class Register : IEndpoint
                 request.LastName,
                 request.Password);
 
-            Result<Guid> result = await sender.Send(command, cancellationToken);
+            Result<Guid> result = await sender.Send(command, cancellationToken) as Result<Guid>;
 
-            return result.Match(Results.Ok, CustomResults.Problem);
+            return result!.Match(Results.Ok, CustomResults.Problem);
         })
         .WithTags(Tags.Users);
     }

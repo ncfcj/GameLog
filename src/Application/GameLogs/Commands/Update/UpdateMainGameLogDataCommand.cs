@@ -1,4 +1,5 @@
 ﻿using Domain.GameLogs.Entities;
+using SharedKernel.Commands;
 
 namespace Application.GameLogs.Commands.Update;
 
@@ -8,4 +9,4 @@ public sealed record UpdateMainGameLogDataCommand(
     DateTime? StartDate, 
     DateTime? EndDate,
     Rating? Rating,
-    List<Genre>? Genres) : ICommand<Guid>;
+    List<Genre>? Genres) : ICommand<GameLogDto>;

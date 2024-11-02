@@ -1,4 +1,5 @@
 ﻿using Gridify;
+using SharedKernel.Queries;
 
 namespace Application.GameLogs.Queries.ListByUserId;
 

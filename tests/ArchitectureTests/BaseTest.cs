@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Domain.Users;
 using Infrastructure.Database;
+using SharedKernel.Commands;
 using Web.Api;
 
 namespace ArchitectureTests;

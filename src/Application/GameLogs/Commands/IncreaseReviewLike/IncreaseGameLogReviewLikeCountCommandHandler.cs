@@ -1,32 +1,27 @@
-﻿using Application.Abstractions.Data;
-using Domain.GameLogs;
+﻿using Domain.GameLogs;
 using Domain.GameLogs.DomainEvents;
-using Microsoft.EntityFrameworkCore;
 using SharedKernel;
 using SharedKernel.Commands;
 
 namespace Application.GameLogs.Commands.IncreaseReviewLike;
 
-internal sealed class IncreaseGameLogReviewLikeCountCommandHandler(IApplicationDbContext context)
-    : ICommandHandler<IncreaseGameLogReviewLikeCountCommand, bool>
+internal sealed class IncreaseGameLogReviewLikeCountCommandHandler(IGameLogRepository repository)
+    : ICommandHandler<IncreaseGameLogReviewLikeCountCommand, GameLogDto>
 {
-    public async Task<Result<bool>> Handle(IncreaseGameLogReviewLikeCountCommand command, CancellationToken cancellationToken)
+    public async Task<Result<GameLogDto>> Handle(IncreaseGameLogReviewLikeCountCommand command, CancellationToken cancellationToken)
     {
-        GameLog gameLog = await context.GameLogs.FirstOrDefaultAsync(x => x.Id == command.GameLogId, cancellationToken);
+        GameLog gameLog = await repository.GetGameLogByIdAsync(command.GameLogId, cancellationToken);
         
         if (gameLog is null)
-        {
-            return Result.Failure<bool>(GameLogErrors.NotFound(command.GameLogId));
-        }
+            return Result.Failure<GameLogDto>(GameLogErrors.NotFound(command.GameLogId));
         
-        gameLog.Raise(new GameLogIncreaseLikeDomainEvent(gameLog.Id));
-        
+        gameLog.Raise(new GameLogIncreaseLikeDomainEvent($"GameLog with id {gameLog.Id} like count has been increased"));
         gameLog.LikeReview();
         
-        context.GameLogs.Update(gameLog);
+        repository.Update(gameLog);
+        await repository.CommitAsync(cancellationToken);
 
-        await context.SaveChangesAsync(cancellationToken);
-
-        return true;
+        var gameLogDto = new GameLogDto(gameLog);
+        return gameLogDto;
     }
 }

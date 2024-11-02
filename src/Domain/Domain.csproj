@@ -4,4 +4,8 @@
     <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Gridify" Version="2.15.0-preview7" />
+  </ItemGroup>
+
 </Project>

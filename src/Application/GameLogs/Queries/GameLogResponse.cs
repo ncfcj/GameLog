@@ -18,21 +18,21 @@ public sealed record GameLogResponse
     public List<Genre> Genres { get; init; }
     public string? SteamAppId { get; init; }
     public Guid UserId { get; init; }
-    
-    public static GameLogResponse FromEntity(GameLog gameLog) => new()
+
+    public GameLogResponse(GameLog gameLog)
     {
-        Id = gameLog.Id,
-        GameName = gameLog.GameName,
-        StartDate = gameLog.StartDate,
-        EndDate = gameLog.EndDate,
-        Review = gameLog.Review,
-        ReviewLikeCount = gameLog.ReviewLikeCount,
-        CreatedAt = gameLog.CreatedAt,
-        Platform = gameLog.Platform,
-        Rating = gameLog.Rating,
-        LogStatus = gameLog.LogStatus,
-        Genres = gameLog.Genres,
-        SteamAppId = gameLog.SteamAppId,
-        UserId = gameLog.UserId
-    };
+        Id = gameLog.Id;
+        GameName = gameLog.GameName;
+        StartDate = gameLog.StartDate;
+        EndDate = gameLog.EndDate;
+        Review = gameLog.Review;
+        ReviewLikeCount = gameLog.ReviewLikeCount;
+        CreatedAt = gameLog.CreatedAt;
+        Platform = gameLog.Platform;
+        Rating = gameLog.Rating;
+        LogStatus = gameLog.LogStatus;
+        Genres = gameLog.Genres;
+        SteamAppId = gameLog.SteamAppId;
+        UserId = gameLog.UserId;
+    }
 }

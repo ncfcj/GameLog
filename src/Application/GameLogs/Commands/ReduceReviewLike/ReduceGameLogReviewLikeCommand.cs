@@ -1,3 +1,5 @@
-﻿namespace Application.GameLogs.Commands.ReduceReviewLike;
+﻿using SharedKernel.Commands;
 
-public sealed record ReduceGameLogReviewLikeCommand(Guid GameLogId) : ICommand<bool>;
+namespace Application.GameLogs.Commands.ReduceReviewLike;
+
+public sealed record ReduceGameLogReviewLikeCommand(Guid GameLogId) : ICommand<GameLogDto>;

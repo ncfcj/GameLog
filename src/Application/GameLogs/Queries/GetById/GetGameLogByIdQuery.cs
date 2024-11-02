@@ -1,3 +1,5 @@
-﻿namespace Application.GameLogs.Queries.GetById;
+﻿using SharedKernel.Queries;
+
+namespace Application.GameLogs.Queries.GetById;
 
 public sealed record GetGameLogByIdQuery(Guid? GameLogId) : IQuery<GameLogResponse>;

@@ -1,32 +1,30 @@
-﻿using Application.Abstractions.Data;
-using Domain.GameLogs;
+﻿using Domain.GameLogs;
 using Domain.GameLogs.DomainEvents;
-using Microsoft.EntityFrameworkCore;
 using SharedKernel;
 using SharedKernel.Commands;
 
 namespace Application.GameLogs.Commands.ReduceReviewLike;
 
-internal sealed class ReduceGameLogReviewLikeCommandHandler(IApplicationDbContext context)
-    : ICommandHandler<ReduceGameLogReviewLikeCommand, bool>
+internal sealed class ReduceGameLogReviewLikeCommandHandler(IGameLogRepository repository)
+    : ICommandHandler<ReduceGameLogReviewLikeCommand, GameLogDto>
 {
-    public async Task<Result<bool>> Handle(ReduceGameLogReviewLikeCommand command, CancellationToken cancellationToken)
+    public async Task<Result<GameLogDto>> Handle(ReduceGameLogReviewLikeCommand command, CancellationToken cancellationToken)
     {
-        GameLog gameLog = await context.GameLogs.FirstOrDefaultAsync(x => x.Id == command.GameLogId, cancellationToken);
+        GameLog gameLog = await repository.GetGameLogByIdAsync(command.GameLogId, cancellationToken);
         
         if (gameLog is null)
-        {
-            return Result.Failure<bool>(GameLogErrors.NotFound(command.GameLogId));
-        }
+            return Result.Failure<GameLogDto>(GameLogErrors.NotFound(command.GameLogId));
         
-        gameLog.Raise(new GameLogReduceLikeDomainEvent(gameLog.Id));
+        gameLog.Raise(new GameLogReduceLikeDomainEvent($"GameLog with Id {gameLog.Id} like count has been decreased"));
         
         gameLog.RemoveLikeFromReview();
         
-        context.GameLogs.Update(gameLog);
+        repository.Update(gameLog);
         
-        await context.SaveChangesAsync(cancellationToken);
+        await repository.CommitAsync(cancellationToken);
 
-        return true;
+        var gameLogDto = new GameLogDto(gameLog);
+        
+        return gameLogDto;
     }
 }
