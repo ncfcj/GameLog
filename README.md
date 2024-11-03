@@ -16,7 +16,6 @@
 - Clean Architecture
 - Command-Query Responsibility Segregation
 - Domain-Driven Design
-- Test-Driven Design
 - Logging
 - Validation
 - Unit testing
