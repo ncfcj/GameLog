@@ -6,21 +6,21 @@ public class LoggerManagerSerilog(ILogger<LoggerManagerSerilog> logger) : ILogge
 {
     public void LogDebug(string message)
     {
-        logger.LogDebug(message);
+        logger.LogDebug("{Message}", message);
     }
 
     public void LogError(Exception ex)
     {
-        logger.LogError(ex, ex.Message);
+        logger.LogError(ex, "{ExceptionMessage}", ex.Message);
     }
 
     public void LogInfo(string message)
     {
-        logger.LogInformation(message);
+        logger.LogInformation("{Message}", message);
     }
 
     public void LogWarn(string message)
     {
-        logger.LogWarning(message);
+        logger.LogWarning("{Message}", message);
     }
 }

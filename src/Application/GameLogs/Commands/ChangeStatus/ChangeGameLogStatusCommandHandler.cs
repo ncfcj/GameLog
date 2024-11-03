@@ -6,7 +6,7 @@ using SharedKernel;
 
 namespace Application.GameLogs.Commands.ChangeStatus;
 
-internal sealed class ChangeGameLogStatusCommandHandler(IGameLogRepository repository) 
+public sealed class ChangeGameLogStatusCommandHandler(IGameLogRepository repository) 
     : ICommandHandler<ChangeGameLogStatusCommand, GameLogDto>
 {
     public async Task<Result<GameLogDto>> Handle(ChangeGameLogStatusCommand command, CancellationToken cancellationToken)

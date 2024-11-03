@@ -6,12 +6,12 @@ namespace Domain.Users;
 public sealed class Friends : Entity
 {
     public Guid Id { get; private set; } = Guid.NewGuid();
-    public Guid FirstUserId { get; private set; }
-    public Guid SecondUserId { get; private set; }
+    public Guid FirstUserId { get; set; }
+    public Guid SecondUserId { get; set; }
     
     [JsonIgnore]
-    public User FirstUser { get; private set; }
+    public User FirstUser { get; set; }
     
     [JsonIgnore]
-    public User SecondUser { get; private set; }
+    public User SecondUser { get; set; }
 }

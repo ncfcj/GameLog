@@ -25,6 +25,33 @@ public class GameLog : Entity
     [JsonIgnore]
     public User User { get; private set; }
 
+    public GameLog(
+        string gameName,
+        DateTime? startDate,
+        DateTime? endDate,
+        string? review,
+        long reviewLikeCount,
+        Platform platform,
+        Rating rating,
+        LogStatus logStatus,
+        List<Genre> genres,
+        string? steamAppId,
+        Guid userId
+    )
+    {
+        GameName = gameName;
+        StartDate = startDate;
+        EndDate = endDate;
+        Review = review;
+        ReviewLikeCount = reviewLikeCount;
+        Platform = platform;
+        Rating = rating;
+        LogStatus = logStatus;
+        Genres = genres;
+        SteamAppId = steamAppId;
+        UserId = userId;
+    }
+
     public GameLog(Guid userId)
     {
         UserId = userId;

@@ -1,12 +1,10 @@
-﻿using Application.Abstractions.Data;
-using Domain.Users;
-using Microsoft.EntityFrameworkCore;
+﻿using Domain.Users;
 using SharedKernel;
 using SharedKernel.Queries;
 
 namespace Application.Users.GetByEmail;
 
-internal sealed class GetUserByEmailQueryHandler(IApplicationDbContext context)
+internal sealed class GetUserByEmailQueryHandler(IUserRepository repository)
     : IQueryHandler<GetUserByEmailQuery, UserResponse>
 {
     public async Task<Result<UserResponse>> Handle(GetUserByEmailQuery query, CancellationToken cancellationToken)

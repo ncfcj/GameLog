@@ -1,6 +1,4 @@
-﻿using Application.Abstractions.Data;
-using Domain.Users;
-using Microsoft.EntityFrameworkCore;
+﻿using Domain.Users;
 using SharedKernel;
 using SharedKernel.Queries;
 
