@@ -1,11 +1,11 @@
-﻿using Application.Abstractions.Data;
-using Domain.GameLogs;
+﻿using Domain.GameLogs;
 using Domain.Users;
 using Infrastructure.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using SharedKernel;
+using SharedKernel.Events;
 using SharedKernel.Handlers;
 using SharedKernel.Logging;
 
@@ -15,7 +15,7 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
     IPublisher publisher, 
     IMediatorHandler mediatorHandler,
     ILoggerManager loggerManager)
-    : DbContext(options), IApplicationDbContext, IUnitOfWork
+    : DbContext(options), IUnitOfWork
 {
     private readonly IMediatorHandler _mediatorHandler = mediatorHandler;
     private readonly ILoggerManager _logger = loggerManager;
@@ -93,7 +93,7 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
             .Select(entry => entry.Entity)
             .SelectMany(entity =>
             {
-                List<IDomainEvent> domainEvents = entity.DomainEvents;
+                List<DomainEvent> domainEvents = entity.DomainEvents;
 
                 entity.ClearDomainEvents();
 
